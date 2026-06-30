@@ -299,7 +299,7 @@ check_cmd "Change output identification" "CHANGE_OUTPUT_INDEX" "$CHANGE_OUTPUT_I
 
 # STUDENT TASK: Create the input JSON structure for the child transaction
 # WRITE YOUR SOLUTION BELOW:
-CHILD_INPUTS= '[{"txid":"'$PARENT_TXID'","vout":'$CHANGE_OUTPUT_INDEX',"sequence":1}]'
+CHILD_INPUTS='[{"txid":"'$PARENT_TXID'","vout":'$CHANGE_OUTPUT_INDEX',"sequence":1}]'
 check_cmd "Child input creation" "CHILD_INPUTS" "$CHILD_INPUTS"
 
 # STUDENT TASK: Calculate fees, allowing for a high fee to help the parent transaction
