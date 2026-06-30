@@ -319,11 +319,11 @@ check_cmd "Child amount calculation" "CHILD_SEND_AMOUNT" "$CHILD_SEND_AMOUNT"
 CHILD_SEND_BTC=$(printf "%.8f" $(echo "scale=8; $CHILD_SEND_AMOUNT / 100000000" | bc -l))
 
 # STUDENT TASK: Create the outputs JSON structure
-CHILD_OUTPUTS=S='[{"'$CHILD_RECIPIENT'":"'$CHILD_SEND_BTC'"}]'
+CHILD_OUTPUTS='[{"'$CHILD_RECIPIENT'":"'$CHILD_SEND_BTC'"}]'
 check_cmd "Child output creation" "CHILD_OUTPUTS" "$CHILD_OUTPUTS"
 
 # STUDENT TASK: Create the raw child transaction
-CHILD_RAW_TX==$(bitcoin-cli -regtest -named createrawtransaction inputs=$CHILD_INPUTS outputs=$CHILD_OUTPUTS )
+CHILD_RAW_TX=$(bitcoin-cli -regtest -named createrawtransaction inputs=$CHILD_INPUTS outputs=$CHILD_OUTPUTS )
 check_cmd "Child transaction creation" "CHILD_RAW_TX" "$CHILD_RAW_TX"
 
 echo "Successfully created child transaction with higher fee!"
@@ -345,13 +345,13 @@ echo "- Sends funds to: bcrt1qxhy8dnae50nwkg6xfmjtedgs6augk5edj2tm3e"
 echo ""
 
 # Decode the secondary transaction (SECONDARY_TX) to get its TXID
-SECONDARY_TXID=D=$(bitcoin-cli -regtest decoderawtransaction $SECONDARY_TX | jq -r ".txid")
+SECONDARY_TXID=$(bitcoin-cli -regtest decoderawtransaction $SECONDARY_TX | jq -r ".txid")
 check_cmd "Secondary TXID extraction" "SECONDARY_TXID" "$SECONDARY_TXID"
 echo "Secondary transaction ID: $SECONDARY_TXID"
 
 # STUDENT TASK: Create the input JSON structure with a 10-block relative timelock
 # WRITE YOUR SOLUTION BELOW:
-TIMELOCK_INPUTS=S='[{"txid":"'$SECONDARY_TXID'","vout":0,"sequence":"0000000a"}]'
+TIMELOCK_INPUTS='[{"txid":"'$SECONDARY_TXID'","vout":0,"sequence":"0000000a"}]'
 check_cmd "Timelock input creation" "TIMELOCK_INPUTS" "$TIMELOCK_INPUTS"
 
 # Recipient address for timelock funds
@@ -359,22 +359,22 @@ TIMELOCK_ADDRESS="bcrt1qxhy8dnae50nwkg6xfmjtedgs6augk5edj2tm3e"
 
 # STUDENT TASK: Calculate the amount to send (use the output value from SECONDARY_TX, minus a fee)
 # Hint: Extract the output value from the secondary TX first
-SECONDARY_OUTPUT_VALUE=E=$(bitcoin-cli -regtest decoderawtransaction $SECONDARY_TX | jq -r '.vout | .[1] | .value' | awk '{s=$1} END {print int(s*100000000 +0.5)}')
+SECONDARY_OUTPUT_VALUE=$(bitcoin-cli -regtest decoderawtransaction $SECONDARY_TX | jq -r '.vout | .[1] | .value' | awk '{s=$1} END {print int(s*100000000 +0.5)}')
 check_cmd "Secondary output value extraction" "SECONDARY_OUTPUT_VALUE" "$SECONDARY_OUTPUT_VALUE"
 
 TIMELOCK_FEE=1000 # Use a simple fee of 1000 satoshis for this exercise
-TIMELOCK_AMOUNT=T=$(awk -v fee=$TIMELOCK_FEE -v value=$SECONDARY_OUTPUT_VALUE 'BEGIN {print value - fee}')
+TIMELOCK_AMOUNT=$(awk -v fee=$TIMELOCK_FEE -v value=$SECONDARY_OUTPUT_VALUE 'BEGIN {print value - fee}')
 check_cmd "Timelock amount calculation" "TIMELOCK_AMOUNT" "$TIMELOCK_AMOUNT"
 
 # Convert to BTC
-TIMELOCK_BTC=C=$(printf "%.8f" $(echo "scale=8; $TIMELOCK_AMOUNT / 100000000" | bc -l))
+TIMELOCK_BTC=$(printf "%.8f" $(echo "scale=8; $TIMELOCK_AMOUNT / 100000000" | bc -l))
 
 # STUDENT TASK: Create the outputs JSON structure
-TIMELOCK_OUTPUTS=S='[{"'$TIMELOCK_ADDRESS'":'$TIMELOCK_BTC'}]'
+TIMELOCK_OUTPUTS='[{"'$TIMELOCK_ADDRESS'":'$TIMELOCK_BTC'}]'
 check_cmd "Timelock output creation" "TIMELOCK_OUTPUTS" "$TIMELOCK_OUTPUTS"
 
 # STUDENT TASK: Create the raw transaction with timelock
-TIMELOCK_TX=X=$(bitcoin-cli -regtest -named createrawtransaction inputs=$TIMELOCK_INPUTS outputs=$TIMELOCK_OUTPUTS)
+TIMELOCK_TX=$(bitcoin-cli -regtest -named createrawtransaction inputs=$TIMELOCK_INPUTS outputs=$TIMELOCK_OUTPUTS)
 check_cmd "Timelock transaction creation" "TIMELOCK_TX" "$TIMELOCK_TX"
 
 echo "Successfully created transaction with 10-block relative timelock!"
