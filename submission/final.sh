@@ -56,10 +56,10 @@ echo "Transaction ID: $TXID"
 
 # STUDENT TASK: Extract the number of inputs and outputs from the transaction
 # WRITE YOUR SOLUTION BELOW:
-NUM_INPUTS=$(bitcoin-cli -regtest decoderawtransaction $BASE_TX | jq '.vin | lengt')
+NUM_INPUTS=$(bitcoin-cli -regtest decoderawtransaction $BASE_TX | jq '.vin | length')
 check_cmd "Input counting" "NUM_INPUTS" "$NUM_INPUTS"
 
-NUM_OUTPUTS=$(bitcoin-cli -regtest decoderawtransaction $BASE_TX | jq '.vout | lengt')
+NUM_OUTPUTS=$(bitcoin-cli -regtest decoderawtransaction $BASE_TX | jq '.vout | length')
 check_cmd "Output counting" "NUM_OUTPUTS" "$NUM_OUTPUTS"
 
 echo "Number of inputs: $NUM_INPUTS"
